@@ -1,55 +1,87 @@
 #include <stdio.h>
-#include <conio.h>
-void main()
+#include <string.h>
+
+void xorOperation(int *temp, int *div, int divisor_len)
 {
-    int i, f[20], n[50], div[50], j, temp, quotient[20], z[10];
-    clrscr();
-    printf("enter the number\n");
-    for (i = 0; i < 8; i++)
+    for (int i = 0; i < divisor_len; i++)
     {
-        scanf("%d", &n[i]);
+        temp[i] = temp[i] ^ div[i];
     }
-    printf("enter the divisor\n");
-    for (i = 0; i < 4; i++)
+}
+
+int main()
+{
+    int data[100], divisor[100], temp[100], remainder[100];
+    int data_len, divisor_len, total_len;
+
+    // Input data length and data bits
+    printf("Enter number of data bits: ");
+    scanf("%d", &data_len);
+    printf("Enter data bits: ");
+    for (int i = 0; i < data_len; i++)
     {
-        scanf("%d", &div[i]);
+        scanf("%d", &data[i]);
     }
-    for (i = 8; i < 12; i++)
+
+    // Input divisor length and divisor bits
+    printf("Enter number of divisor bits: ");
+    scanf("%d", &divisor_len);
+    printf("Enter divisor bits: ");
+    for (int i = 0; i < divisor_len; i++)
     {
-        n[i] = 0;
+        scanf("%d", &divisor[i]);
     }
-    for (i = 0; i < 8; i++)
+
+    // Append zeros to the data
+    total_len = data_len + divisor_len - 1;
+    for (int i = data_len; i < total_len; i++)
     {
-        temp = i;
-        if (n[i] == 1)
+        data[i] = 0;
+    }
+
+    // Copy data to temp for division
+    for (int i = 0; i < total_len; i++)
+    {
+        temp[i] = data[i];
+    }
+
+    // Perform division
+    for (int i = 0; i < data_len; i++)
+    {
+        if (temp[i] == 1)
         {
-            for (j = 0; j < 4; j++)
+            // Do XOR with divisor
+            for (int j = 0; j < divisor_len; j++)
             {
-                if (n[temp] == div[j])
-                {
-                    n[temp] = 0;
-                    f[j] = 0;
-                }
-                else
-                {
-                    n[temp] = 1;
-                    f[j] = 1;
-                }
-                temp = temp + 1;
+                temp[i + j] = temp[i + j] ^ divisor[j];
             }
-            quotient[i] = 1;
         }
-        else
-            quotient[i] = 0;
     }
-    printf("\nthe quotient is \n");
-    for (i = 0; i < 8; i++)
-        printf("%d", quotient[i]);
 
-    printf("\n and the remainder is \n ");
+    // Copy remainder
+    for (int i = 0; i < divisor_len - 1; i++)
+    {
+        remainder[i] = temp[data_len + i];
+    }
 
-    for (j = 0; j < 4; j++)
-        printf("%d", f[j]);
+    // Display results
+    printf("\nCRC Remainder: ");
+    for (int i = 0; i < divisor_len - 1; i++)
+    {
+        printf("%d", remainder[i]);
+    }
 
-    getch();
+    printf("\nFinal Transmitted Codeword: ");
+    for (int i = 0; i < data_len; i++)
+    {
+        printf("%d", data[i]);
+    }
+    for (int i = 0; i < divisor_len - 1; i++)
+    {
+        printf("%d", remainder[i]);
+    }
+
+    printf("\n");
+
+    return 0;
 }
