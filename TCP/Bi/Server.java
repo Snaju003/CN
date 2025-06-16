@@ -1,4 +1,5 @@
 package TCP.Bi;
+
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
@@ -28,8 +29,7 @@ public class Server {
             sc.close();
             in.close();
             out.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
